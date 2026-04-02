@@ -1,0 +1,29 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"features": {
+		"ghcr.io/jsburckhardt/devcontainer-features/jnv:1": {},
+		"ghcr.io/georgofenbeck/features/thefuck-pipx:1": {},
+		"ghcr.io/bascodes/devcontainer-features/desktop-novnc:0": {
+			"version": "1.2.0"
+		},
+		"ghcr.io/bascodes/devcontainer-features/webinstall.dev:1": {},
+		"ghcr.io/martinaskestad/features/vimsrc:1": {
+			"enable_gui": true,
+			"enable_sound": true,
+			"enable_perl": true,
+			"enable_python": true,
+			"enable_python3": true,
+			"enable_ruby": true,
+			"enable_lua": true,
+			"enable_tcl": true,
+			"enable_mzscheme": true
+		},
+		"ghcr.io/devcontainer-community/devcontainer-features/webinstall.dev:1": {
+			"version": "latest"
+		},
+		"ghcr.io/olivierlemasle/devcontainers-features/tauri:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainer-config/features/dot-config:4": {}
+	}
+}
