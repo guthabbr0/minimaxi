@@ -88,7 +88,7 @@ All checks below were performed on `2026-04-02`.
 - [x] Telemetry timing and tokens-per-second math
 - [x] Video status normalization and request payload building
 
-## Manual Checks Still Needed
+## Manual Checks Still Needed - ${{MINIMAXI_API_KEY_SECRET}} Contains the secret for further testing (**ONLY VALIDS ON API.MINIMAXI.COM END POINT**)
 These require a real MiniMax API key and live model access in the browser.
 
 - [ ] Save API key, reload page, confirm key persistence and catalog fallback badge
