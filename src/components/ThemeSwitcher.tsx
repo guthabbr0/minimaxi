@@ -25,6 +25,8 @@ export function ThemeSwitcher({
           }`}
           type="button"
           title={theme.label}
+          aria-label={theme.label}
+          aria-pressed={activeTheme === theme.id}
           onClick={() => onThemeChange(theme.id)}
         >
           {theme.key}

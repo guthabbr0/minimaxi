@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import {
-  API_BASE_PRESETS,
-  DEFAULT_API_BASE_URL
+  API_BASE_PRESETS
 } from "../lib/minimax/catalog";
 import { trimBaseUrl } from "../lib/minimax/base";
 import type { AppSettings, CatalogState } from "../types";
@@ -46,9 +45,14 @@ export function SettingsModal({
         if (event.target === backdropRef.current) onClose();
       }}
     >
-      <div className="modal-panel">
+      <div
+        className="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+      >
         <div className="modal-header">
-          <h2 className="modal-title">Settings</h2>
+          <h2 className="modal-title" id="settings-modal-title">Settings</h2>
           <button
             className="modal-close"
             type="button"
@@ -67,20 +71,26 @@ export function SettingsModal({
               value={isCustomHost ? "custom" : settings.apiBaseUrl}
               onChange={(event) => {
                 const next = event.target.value;
-                onUpdate({
-                  apiBaseUrl:
-                    next === "custom"
-                      ? settings.apiBaseUrl
-                      : trimBaseUrl(next)
-                });
+                if (next === "custom") {
+                  const current = trimBaseUrl(settings.apiBaseUrl);
+                  const isPreset = API_BASE_PRESETS.includes(
+                    current as (typeof API_BASE_PRESETS)[number]
+                  );
+                  onUpdate({
+                    apiBaseUrl: isPreset ? "" : current
+                  });
+                } else {
+                  onUpdate({ apiBaseUrl: trimBaseUrl(next) });
+                }
               }}
             >
-              <option value={DEFAULT_API_BASE_URL}>
-                {DEFAULT_API_BASE_URL}
-              </option>
-              <option value="https://api.minimax.io/v1">
-                https://api.minimax.io/v1
-              </option>
+              {API_BASE_PRESETS.filter((preset) => preset !== "custom").map(
+                (preset) => (
+                  <option key={preset} value={preset}>
+                    {preset}
+                  </option>
+                )
+              )}
               <option value="custom">Custom</option>
             </select>
           </label>
