@@ -1,5 +1,5 @@
 export type AppMode = "text" | "image" | "video";
-export type Theme = "dark";
+export type Theme = "midnight" | "ember" | "abyss";
 export type TextBackend = "openai" | "native";
 export type CatalogSource = "static" | "dynamic";
 export type ThreadItemStatus = "running" | "success" | "error";

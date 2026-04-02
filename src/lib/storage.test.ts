@@ -60,6 +60,26 @@ describe("storage settings", () => {
     expect(loadSettings().apiKey).toBe("abc");
     expect(loadSettings().streamText).toBe(false);
   });
+
+  it("coerces invalid or legacy theme values to the default", () => {
+    storage.setItem(
+      "mmui:v1:settings",
+      JSON.stringify({ theme: "dark" })
+    );
+    expect(loadSettings().theme).toBe("midnight");
+
+    storage.setItem(
+      "mmui:v1:settings",
+      JSON.stringify({ theme: "nonexistent" })
+    );
+    expect(loadSettings().theme).toBe("midnight");
+
+    storage.setItem(
+      "mmui:v1:settings",
+      JSON.stringify({ theme: "" })
+    );
+    expect(loadSettings().theme).toBe("midnight");
+  });
 });
 
 describe("default thread", () => {
