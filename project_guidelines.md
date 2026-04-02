@@ -20,6 +20,8 @@ Additionally, `src/styles.css` contains a header comment with `CURRENT_VERSION_T
 
 **Current version: v1**
 
+> ⚠️ When incrementing the version, update this line, the `Sidebar.tsx` brand, the `index.html` title, and the `styles.css` header comment.
+
 ---
 
 ## 2. Architecture Overview
