@@ -908,6 +908,8 @@ export default function App() {
             type="button"
             onClick={() => setSidebarOpen((prev) => !prev)}
             title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            aria-label={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            aria-expanded={sidebarOpen}
           >
             ☰
           </button>
