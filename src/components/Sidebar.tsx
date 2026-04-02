@@ -17,14 +17,21 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <div className="sidebar__top">
-        <div>
-          <div className="sidebar__eyebrow">PROJECT</div>
-          <h1 className="sidebar__title">MiniMax UI</h1>
+      {/* [[<<CURRENT VERSION TAG: 1>>]] */}
+      <div className="sidebar__header">
+        <div className="sidebar__brand">
+          MiniMax <span className="sidebar__version">v1</span>
         </div>
-        <button className="ghost-button" type="button" onClick={onCreate}>
-          New
-        </button>
+        <div className="sidebar__actions">
+          <button
+            className="icon-btn"
+            type="button"
+            onClick={onCreate}
+            title="New thread"
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <div className="sidebar__list">

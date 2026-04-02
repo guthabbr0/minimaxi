@@ -31,8 +31,10 @@ export const DEFAULT_SETTINGS: AppSettings = {
   streamText: true,
   rememberKey: true,
   showReasoning: true,
-  theme: "dark"
+  theme: "midnight"
 };
+
+const VALID_THEMES = new Set<string>(["midnight", "ember", "abyss"]);
 
 export function createDefaultThread(): Thread {
   const now = Date.now();
@@ -94,10 +96,14 @@ export function loadSettings(): AppSettings {
 
   try {
     const parsed = JSON.parse(raw) as Partial<AppSettings>;
-    return {
+    const merged = {
       ...DEFAULT_SETTINGS,
       ...parsed
     };
+    if (!VALID_THEMES.has(merged.theme)) {
+      merged.theme = "midnight";
+    }
+    return merged;
   } catch {
     return DEFAULT_SETTINGS;
   }

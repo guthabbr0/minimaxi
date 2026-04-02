@@ -7,7 +7,9 @@ import {
 } from "react";
 import { AdvancedDrawer } from "./components/AdvancedDrawer";
 import { Composer } from "./components/Composer";
+import { SettingsModal } from "./components/SettingsModal";
 import { Sidebar } from "./components/Sidebar";
+import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { Transcript } from "./components/Transcript";
 import {
   createTelemetryTracker,
@@ -52,6 +54,7 @@ import {
 } from "./lib/storage";
 import type {
   AppMode,
+  AppSettings,
   CatalogState,
   ImageConfig,
   ImageReference,
@@ -59,6 +62,7 @@ import type {
   NativeTextMessage,
   OpenAiTextMessage,
   TextRequestPayload,
+  Theme,
   Thread,
   ThreadItem,
   ThreadItemStatus,
@@ -77,6 +81,8 @@ export default function App() {
     error: "Static catalog"
   });
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [busyItemId, setBusyItemId] = useState<string | null>(null);
 
@@ -113,6 +119,10 @@ export default function App() {
   useEffect(() => {
     saveSettings(settings);
   }, [settings]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", settings.theme);
+  }, [settings.theme]);
 
   useEffect(() => {
     if (!isHydrated) {
@@ -311,6 +321,14 @@ export default function App() {
       ...current,
       activeMode: nextMode
     }));
+  }
+
+  function handleSettingsUpdate(patch: Partial<AppSettings>) {
+    setSettings((current) => ({ ...current, ...patch }));
+  }
+
+  function handleThemeChange(theme: Theme) {
+    setSettings((current) => ({ ...current, theme }));
   }
 
   function handleModelChange(model: string) {
@@ -872,7 +890,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${sidebarOpen ? "" : "app-shell--sidebar-collapsed"}`}>
       <Sidebar
         activeThreadId={activeThreadId}
         threads={threads}
@@ -885,82 +903,32 @@ export default function App() {
 
       <main className="main-pane">
         <header className="topbar">
+          <button
+            className="topbar__toggle"
+            type="button"
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+          >
+            ☰
+          </button>
           <div className="topbar__title">
-            <span>New thread</span>
+            <span>Thread</span>
             <strong>{activeThread?.title ?? "Loading..."}</strong>
           </div>
           <div className="topbar__controls">
-            <label className="field field--inline">
-              <span>Host</span>
-              <select
-                value={
-                  API_BASE_PRESETS.includes(settings.apiBaseUrl as (typeof API_BASE_PRESETS)[number])
-                    ? settings.apiBaseUrl
-                    : "custom"
-                }
-                onChange={(event) => {
-                  const next = event.target.value;
-                  setSettings((current) => ({
-                    ...current,
-                    apiBaseUrl:
-                      next === "custom" ? current.apiBaseUrl : trimBaseUrl(next)
-                  }));
-                }}
-              >
-                <option value={DEFAULT_API_BASE_URL}>{DEFAULT_API_BASE_URL}</option>
-                <option value="https://api.minimax.io/v1">https://api.minimax.io/v1</option>
-                <option value="custom">custom</option>
-              </select>
-            </label>
-
-            {!API_BASE_PRESETS.includes(
-              settings.apiBaseUrl as (typeof API_BASE_PRESETS)[number]
-            ) ? (
-              <input
-                className="text-input text-input--host"
-                placeholder="https://api.minimaxi.com/v1"
-                value={settings.apiBaseUrl}
-                onChange={(event) =>
-                  setSettings((current) => ({
-                    ...current,
-                    apiBaseUrl: trimBaseUrl(event.target.value)
-                  }))
-                }
-              />
-            ) : null}
-
-            <input
-              className="text-input text-input--key"
-              placeholder="MiniMax API key"
-              type="password"
-              value={settings.apiKey}
-              onChange={(event) =>
-                setSettings((current) => ({
-                  ...current,
-                  apiKey: event.target.value
-                }))
-              }
-            />
-
-            <label className="switch switch--row">
-              <span>Thinking</span>
-              <input
-                checked={settings.showReasoning}
-                type="checkbox"
-                onChange={(event) =>
-                  setSettings((current) => ({
-                    ...current,
-                    showReasoning: event.target.checked
-                  }))
-                }
-              />
-            </label>
-
-            <div className="catalog-badge">
+            <span className="catalog-badge">
               {catalogState.isDiscovering
                 ? "Checking models..."
                 : catalogState.error ?? "Dynamic catalog"}
-            </div>
+            </span>
+            <button
+              className="icon-btn"
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              title="Settings"
+            >
+              ⚙
+            </button>
           </div>
         </header>
 
@@ -1023,6 +991,19 @@ export default function App() {
           onUpdateVideo={updateVideoConfig}
         />
       ) : null}
+
+      <SettingsModal
+        open={settingsOpen}
+        settings={settings}
+        catalogState={catalogState}
+        onUpdate={handleSettingsUpdate}
+        onClose={() => setSettingsOpen(false)}
+      />
+
+      <ThemeSwitcher
+        activeTheme={settings.theme}
+        onThemeChange={handleThemeChange}
+      />
     </div>
   );
 }
