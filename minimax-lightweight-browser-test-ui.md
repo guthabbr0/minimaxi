@@ -92,6 +92,7 @@
 - For unsupported-model or unsupported-plan responses, keep the dropdown unchanged and surface the endpoint error exactly.
 
 ## Testing and Acceptance
+- ${{MINIMAXI_API_KEY_SECRET}} Contains the secret for further testing (**ONLY VALIDS ON API.MINIMAXI.COM END POINT**)
 - Unit tests: storage versioning, static-catalog fallback, telemetry math, SSE parsing, request builders, video polling state transitions.
 - Manual smoke test: save API key, reload, confirm persistence, confirm static catalog badge after `/models` fallback.
 - Manual text test: one streaming `MiniMax-M2.7` chat, one non-stream chat, one `M2-her` chat, all with telemetry footer rendered.
