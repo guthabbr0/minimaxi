@@ -8,6 +8,7 @@ import type {
   Thread,
   UploadAsset
 } from "../types";
+import { THEME_IDS, type Theme } from "../types";
 
 const SETTINGS_KEY = "mmui:v1:settings";
 const DB_NAME = "mmui:v1";

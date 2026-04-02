@@ -22,12 +22,9 @@ import {
   createId,
   discoverModels,
   getImageDimensions,
-  toApiErrorInfo,
-  trimBaseUrl
+  toApiErrorInfo
 } from "./lib/minimax/base";
 import {
-  DEFAULT_API_BASE_URL,
-  API_BASE_PRESETS,
   STATIC_CATALOG,
   getDefaultImageModel,
   getDefaultVideoModel,
