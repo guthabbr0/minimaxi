@@ -67,12 +67,15 @@ export function SettingsModal({
               value={isCustomHost ? "custom" : settings.apiBaseUrl}
               onChange={(event) => {
                 const next = event.target.value;
-                onUpdate({
-                  apiBaseUrl:
-                    next === "custom"
-                      ? settings.apiBaseUrl
-                      : trimBaseUrl(next)
-                });
+                if (next === "custom") {
+                  const current = trimBaseUrl(settings.apiBaseUrl);
+                  const isPreset = API_BASE_PRESETS.includes(
+                    current as (typeof API_BASE_PRESETS)[number]
+                  );
+                  onUpdate({ apiBaseUrl: isPreset ? "" : current });
+                } else {
+                  onUpdate({ apiBaseUrl: trimBaseUrl(next) });
+                }
               }}
             >
               {API_BASE_PRESETS.filter((preset) => preset !== "custom").map(
