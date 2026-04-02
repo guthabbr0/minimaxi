@@ -85,3 +85,27 @@ npm test        # full test suite
 ```
 
 There is no enforced commit message format. Keep changes focused and ensure the build and test suite remain green.
+
+## Agent Usage & MCP Toolset Limitations
+
+AI coding agents working on this repository should be aware of the following constraints and conventions. For full project guidelines see [`project_guidelines.md`](project_guidelines.md).
+
+### Available Agent Capabilities
+
+- Read and search code, issues, pull requests, commits, and workflow runs
+- Create and edit files, run builds (`npm run build`), and execute tests (`npm test`)
+- Create branches, commit changes, and open or update pull requests
+
+### Unavailable Agent Capabilities
+
+- **Issue creation/modification** — agents cannot create, close, label, or assign GitHub issues via MCP tools; these actions must be performed manually
+- **Repository settings** — agents cannot modify repo configuration, branch protection, or webhooks
+- **External API calls** — agents cannot make live calls to the MiniMax API or other external services
+
+### Agent Conventions
+
+- Reference existing issues by number in commits and PR descriptions
+- Run `npm run build && npm test` before submitting any changes
+- Follow the component rules in `project_guidelines.md` — never define React components inside other components
+- Keep PRs focused on a single logical change
+- Test files live next to their source (`foo.test.ts` alongside `foo.ts`)
