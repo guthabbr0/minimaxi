@@ -28,6 +28,7 @@ export function Sidebar({
             type="button"
             onClick={onCreate}
             title="New thread"
+            aria-label="New thread"
           >
             +
           </button>
