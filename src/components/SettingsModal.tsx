@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import {
-  API_BASE_PRESETS,
-  DEFAULT_API_BASE_URL
+  API_BASE_PRESETS
 } from "../lib/minimax/catalog";
 import { trimBaseUrl } from "../lib/minimax/base";
 import type { AppSettings, CatalogState } from "../types";
@@ -46,9 +45,14 @@ export function SettingsModal({
         if (event.target === backdropRef.current) onClose();
       }}
     >
-      <div className="modal-panel">
+      <div
+        className="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+      >
         <div className="modal-header">
-          <h2 className="modal-title">Settings</h2>
+          <h2 className="modal-title" id="settings-modal-title">Settings</h2>
           <button
             className="modal-close"
             type="button"

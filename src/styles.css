@@ -176,6 +176,7 @@ a {
 .app-shell--sidebar-collapsed .sidebar {
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
 }
 
 .sidebar__header {
@@ -282,7 +283,9 @@ a {
   transition: opacity 100ms ease, color 100ms ease;
 }
 
-.thread-row:hover .thread-row__delete {
+.thread-row:hover .thread-row__delete,
+.thread-row:focus-within .thread-row__delete,
+.thread-row__delete:focus-visible {
   opacity: 1;
 }
 
@@ -969,11 +972,15 @@ a {
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
   transform: translateX(100%);
-  transition: transform 200ms ease;
+  transition: transform 200ms ease, visibility 200ms ease;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .advanced-drawer--open {
   transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .advanced-drawer__header {

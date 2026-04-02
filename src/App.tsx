@@ -928,6 +928,9 @@ export default function App() {
               type="button"
               onClick={() => setSettingsOpen(true)}
               title="Settings"
+              aria-label="Settings"
+              aria-haspopup="dialog"
+              aria-expanded={settingsOpen}
             >
               ⚙
             </button>
