@@ -8,7 +8,6 @@ import type {
   Thread,
   UploadAsset
 } from "../types";
-import { THEME_IDS, type Theme } from "../types";
 
 const SETTINGS_KEY = "mmui:v1:settings";
 const DB_NAME = "mmui:v1";
@@ -33,7 +32,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   streamText: true,
   rememberKey: true,
   showReasoning: true,
-  theme: "midnight"
+  theme: "midnight",
+  enterSendsMessage: true
 };
 
 const VALID_THEMES = new Set<Theme>(["midnight", "ember", "abyss"]);

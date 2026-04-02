@@ -54,6 +54,7 @@ export interface AppSettings {
   rememberKey: boolean;
   showReasoning: boolean;
   theme: Theme;
+  enterSendsMessage: boolean;
 }
 
 export interface UploadAsset {

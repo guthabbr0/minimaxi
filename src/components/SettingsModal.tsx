@@ -129,6 +129,22 @@ export function SettingsModal({
             />
           </label>
 
+          <label className="settings-field settings-field--row">
+            <span className="settings-label">Enter sends message</span>
+            <input
+              checked={settings.enterSendsMessage}
+              type="checkbox"
+              onChange={(event) =>
+                onUpdate({ enterSendsMessage: event.target.checked })
+              }
+            />
+            <span className="settings-hint">
+              {settings.enterSendsMessage
+                ? "Enter sends, Shift+Enter for new line"
+                : "Shift+Enter sends, Enter for new line"}
+            </span>
+          </label>
+
           <div className="settings-field">
             <span className="settings-label">Catalog</span>
             <span className="settings-value">

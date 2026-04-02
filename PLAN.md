@@ -68,6 +68,8 @@ All checks below were performed on `2026-04-02`.
 - [x] Image results render inline with previews
 - [x] Video results render inline with a playable `<video>` when a URL exists
 - [x] Unsupported model/plan errors are surfaced from the endpoint response
+- [x] Sidebar scrolls independently from main chat transcript
+- [x] Enter key sends the prompt by default (configurable in Settings)
 
 ## Telemetry Checks
 - [x] Text telemetry includes `ttfb`, `ttft`, `generation`, `latency`, `tok/sec`, `prompt`, `completion`, `total`, `model`, `requestId`

@@ -13,6 +13,7 @@ interface ComposerProps {
   catalogState: CatalogState;
   isBusy: boolean;
   streamText: boolean;
+  enterSendsMessage: boolean;
   summaryChips: string[];
   onModeChange: (mode: AppMode) => void;
   onModelChange: (model: string) => void;
@@ -36,6 +37,7 @@ export function Composer({
   catalogState,
   isBusy,
   streamText,
+  enterSendsMessage,
   summaryChips,
   onModeChange,
   onModelChange,
@@ -165,6 +167,16 @@ export function Composer({
         rows={5}
         value={prompt}
         onChange={(event) => onPromptChange(mode, event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" || event.metaKey || event.ctrlKey || event.altKey) return;
+          if (enterSendsMessage && !event.shiftKey) {
+            event.preventDefault();
+            if (!isBusy) onSubmit();
+          } else if (!enterSendsMessage && event.shiftKey) {
+            event.preventDefault();
+            if (!isBusy) onSubmit();
+          }
+        }}
       />
 
       {mode === "image" && thread.imageConfig.variant === "i2i" ? (

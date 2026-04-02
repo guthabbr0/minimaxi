@@ -141,7 +141,7 @@ Sidebar toggle: `☰` button in topbar sets `sidebarOpen` state, which toggles `
 ## 7. Settings & Persistence
 
 **localStorage** (`mmui:v1:settings`):
-- API base URL, API key, active mode, stream toggle, reasoning toggle, theme
+- API base URL, API key, active mode, stream toggle, reasoning toggle, theme, enter-sends-message toggle
 
 **IndexedDB** (`mmui:v1`):
 - `threads` store: Thread objects (serialized without blob URLs)
@@ -192,7 +192,17 @@ npm test        # full test suite
 
 ---
 
-## 11. Future Enhancement Ideas
+## 11. Known Issues & Fixes
+
+These issues have been identified and fixed. Documented here to prevent regressions:
+
+1. **Sidebar scrolling with main content**: The sidebar must scroll independently of the main chat transcript. The `.sidebar` and `.main-pane` each have their own `height: 100vh` and overflow rules, preventing the sidebar header/thread list from scrolling away when the user scrolls down in the chat.
+
+2. **No keyboard shortcut to send messages**: The composer textarea must support sending via keyboard. By default, Enter sends the message and Shift+Enter inserts a newline. This behavior is toggled via the `enterSendsMessage` setting in Settings (swaps Enter and Shift+Enter roles).
+
+---
+
+## 12. Future Enhancement Ideas
 
 These are proposed but **not implemented** — left for discussion:
 

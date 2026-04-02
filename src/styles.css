@@ -152,7 +152,8 @@ a {
 .app-shell {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   transition: grid-template-columns 200ms ease;
 }
 
@@ -171,6 +172,7 @@ a {
   overflow: hidden;
   transition: opacity 150ms ease;
   min-width: 0;
+  height: 100vh;
 }
 
 .app-shell--sidebar-collapsed .sidebar {
@@ -302,6 +304,8 @@ a {
   flex-direction: column;
   min-width: 0;
   position: relative;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 /* -----------------------------------------------------------------
@@ -1129,6 +1133,13 @@ a {
   width: 14px;
   height: 14px;
   accent-color: var(--accent);
+}
+
+.settings-hint {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  color: var(--muted-soft);
+  font-family: var(--font-mono);
 }
 
 /* -----------------------------------------------------------------

@@ -950,6 +950,7 @@ export default function App() {
             modelOptions={modelOptions}
             summaryChips={summaryChips}
             streamText={settings.streamText}
+            enterSendsMessage={settings.enterSendsMessage}
             thread={activeThread}
             onAddFirstFrame={(files) => {
               void addFirstFrame(files);
