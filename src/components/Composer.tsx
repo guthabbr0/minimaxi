@@ -208,25 +208,27 @@ export function Composer({
         </div>
       ) : null}
 
-      {summaryChips.length ? (
-        <div className="chip-row">
-          {summaryChips.map((chip) => (
-            <span className="chip" key={chip}>
-              {chip}
-            </span>
-          ))}
-        </div>
-      ) : null}
+      <div className="composer__footer">
+        {summaryChips.length ? (
+          <div className="chip-row">
+            {summaryChips.map((chip) => (
+              <span className="chip" key={chip}>
+                {chip}
+              </span>
+            ))}
+          </div>
+        ) : null}
 
-      <div className="composer__actions">
-        <button
-          className="primary-button"
-          disabled={isBusy}
-          type="button"
-          onClick={onSubmit}
-        >
-          {isBusy ? "Working..." : mode === "text" ? "Send" : "Generate"}
-        </button>
+        <div className="composer__actions">
+          <button
+            className="primary-button"
+            disabled={isBusy}
+            type="button"
+            onClick={onSubmit}
+          >
+            {isBusy ? "Working..." : mode === "text" ? "Send" : "Generate"}
+          </button>
+        </div>
       </div>
     </div>
   );

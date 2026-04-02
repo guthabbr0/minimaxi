@@ -846,7 +846,8 @@ a {
 
 /* Chips */
 .chip-row {
-  margin-top: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
 .chip {
@@ -855,10 +856,18 @@ a {
   font-size: 10px;
 }
 
+/* Footer row: chips + action button on one line */
+.composer__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 /* Action buttons */
 .composer__actions {
-  justify-content: flex-end;
-  margin-top: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .ghost-button,
