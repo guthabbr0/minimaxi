@@ -76,9 +76,7 @@ export function SettingsModal({
                   const isPreset = API_BASE_PRESETS.includes(
                     current as (typeof API_BASE_PRESETS)[number]
                   );
-                  onUpdate({
-                    apiBaseUrl: isPreset ? "" : current
-                  });
+                  onUpdate({ apiBaseUrl: isPreset ? "" : current });
                 } else {
                   onUpdate({ apiBaseUrl: trimBaseUrl(next) });
                 }
