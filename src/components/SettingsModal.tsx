@@ -13,10 +13,6 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-function isApiBasePreset(value: string): value is (typeof API_BASE_PRESETS)[number] {
-  return (API_BASE_PRESETS as readonly string[]).includes(value);
-}
-
 export function SettingsModal({
   open,
   settings,
@@ -25,7 +21,6 @@ export function SettingsModal({
   onClose
 }: SettingsModalProps) {
   const backdropRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -36,15 +31,11 @@ export function SettingsModal({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  useEffect(() => {
-    if (open) {
-      closeRef.current?.focus();
-    }
-  }, [open]);
-
   if (!open) return null;
 
-  const isCustomHost = !isApiBasePreset(settings.apiBaseUrl);
+  const isCustomHost = !API_BASE_PRESETS.includes(
+    settings.apiBaseUrl as (typeof API_BASE_PRESETS)[number]
+  );
 
   return (
     <div
@@ -65,7 +56,6 @@ export function SettingsModal({
           <button
             className="modal-close"
             type="button"
-            ref={closeRef}
             onClick={onClose}
             aria-label="Close settings"
           >
@@ -83,10 +73,10 @@ export function SettingsModal({
                 const next = event.target.value;
                 if (next === "custom") {
                   const current = trimBaseUrl(settings.apiBaseUrl);
-                  const isPreset = isApiBasePreset(current);
-                  onUpdate({
-                    apiBaseUrl: isPreset ? "" : current
-                  });
+                  const isPreset = API_BASE_PRESETS.includes(
+                    current as (typeof API_BASE_PRESETS)[number]
+                  );
+                  onUpdate({ apiBaseUrl: isPreset ? "" : current });
                 } else {
                   onUpdate({ apiBaseUrl: trimBaseUrl(next) });
                 }

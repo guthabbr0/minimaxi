@@ -17,6 +17,7 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
+      {/* [[<<CURRENT VERSION TAG: 1>>]] */}
       <div className="sidebar__header">
         <div className="sidebar__brand">
           MiniMax <span className="sidebar__version">v1</span>

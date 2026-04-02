@@ -1,24 +1,45 @@
 # Project Guidelines & Conventions
 
-> Comprehensive grounding documentation for the MiniMax WebUI project.
-> Referenced by issue #10 and PR #5.
+> **Padawan's Codex**: _"The Light Side of the Code demands discipline, clarity, and humility.
+> Document what you broke, how you broke it, and how you crawled back."_
 
 ---
 
-## 1. Architecture Overview
+## 1. Version Tagging (MANDATORY)
+
+Every release **must** increment the version tag. The tag appears in **two** places:
+1. **Visible in the UI title**: `MiniMax v{N}` (rendered in `Sidebar.tsx` brand area)
+2. **Hidden comment for machine parsing**: `{/* [[<<CURRENT VERSION TAG: {N}>>]] */}` (in `Sidebar.tsx`)
+
+Format:
+```
+v1 → v2 → v3 …
+```
+
+Additionally, `src/styles.css` contains a header comment with `CURRENT_VERSION_TAG: {N}` and `index.html` `<title>` reflects the version.
+
+**Current version: v1**
+
+> ⚠️ When incrementing the version, update this line, the `Sidebar.tsx` brand, the `index.html` title, and the `styles.css` header comment.
+
+---
+
+## 2. Architecture Overview
 
 ```
 src/
   main.tsx                   React entry point
   App.tsx                    App shell — owns ALL state, routes between modes
   types.ts                   All shared TypeScript interfaces and types
-  styles.css                 Global vanilla CSS
+  styles.css                 Global vanilla CSS (ALL 3 themes live here)
   components/
     Sidebar.tsx              Thread list + brand + new-thread control
     Transcript.tsx           Message history display (text/image/video)
     Composer.tsx             Input bar (mode selector, model, prompt, uploads)
     AdvancedDrawer.tsx       Per-request parameter controls (overlay panel)
     TelemetryFooter.tsx      Timing metrics display per item
+    SettingsModal.tsx         API settings modal (host, key, reasoning)
+    ThemeSwitcher.tsx         Theme 1/2/3 hot-swap buttons (lower-right)
   lib/
     storage.ts               localStorage (settings) + IndexedDB (threads/media)
     telemetry.ts             TTFB, TTFT, tok/sec, latency calculations
@@ -35,7 +56,31 @@ src/
 
 ---
 
-## 2. React Component Rules
+## 3. Theme System
+
+Three dark themes, hot-swappable via CSS custom properties on `[data-theme]`:
+
+| ID | Name | Character |
+|----|------|-----------|
+| `midnight` | Midnight | Cool blue-slate, VS Code inspired (default) |
+| `ember` | Ember | Warm amber/brown tones |
+| `abyss` | Abyss | Deep navy with teal accents |
+
+**Implementation:**
+- CSS variables defined per theme in `styles.css` via `[data-theme="..."]` selectors
+- `App.tsx` applies `data-theme` to `document.documentElement` via `useEffect`
+- `ThemeSwitcher` component renders 1/2/3 buttons in fixed lower-right corner
+- Theme preference persists in `AppSettings.theme` via localStorage
+
+**To add a new theme:**
+1. Add the theme ID to `Theme` type in `types.ts`
+2. Add `VALID_THEMES` entry in `storage.ts`
+3. Add `[data-theme="newtheme"]` CSS block in `styles.css`
+4. Add entry in `ThemeSwitcher.tsx` THEMES array
+
+---
+
+## 4. React Component Rules (CRITICAL)
 
 ### ⛔ Never define components inside other components
 
@@ -54,7 +99,6 @@ function App() { return <Layout {...props} />; }
 ```
 
 ### Component Placement Rules
-
 - **All components** defined at **module scope** (top-level of their file)
 - When a layout/sub-component needs parent state, accept it as **explicit props**
 - Do **not** use closures over parent state to avoid identity instability
@@ -62,41 +106,52 @@ function App() { return <Layout {...props} />; }
 
 ---
 
-## 3. Code Style
+## 5. Code Style
 
 - **TypeScript strict mode** throughout; no `any`, no type assertions without justification
 - **Vanilla CSS** in `src/styles.css`; no Tailwind, no CSS-in-JS, no UI component library
 - **React state only** — no Redux, Zustand, Jotai, or any state management library
 - **Named exports** preferred; default exports only for the root `App` component
 - **ESM throughout** (`"type": "module"` in package.json)
+- **System font stacks** — no CDN font imports; fonts resolve locally
 - No linter or formatter is configured — do not add one without discussion
 
 ---
 
-## 4. Layout Architecture
+## 6. Layout Architecture
 
 The app uses a **2-column CSS Grid** layout:
 
-- **Left column**: Sidebar (thread list, new-thread button)
+```
+.app-shell {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+```
+
+- **Left column**: Sidebar (collapsible via `app-shell--sidebar-collapsed` class)
 - **Right column**: Main pane (topbar + transcript + composer)
-- **Advanced drawer**: Collapsible overlay from the right for per-request parameters
+- **Advanced drawer**: Always a fixed overlay from the right (z-index 20)
+- **Settings modal**: Full-screen backdrop overlay (z-index 50)
+- **Theme switcher**: Fixed bottom-right (z-index 30)
+
+Sidebar toggle: `☰` button in topbar sets `sidebarOpen` state, which toggles `app-shell--sidebar-collapsed` CSS class.
 
 ---
 
-## 5. Settings & Persistence
+## 7. Settings & Persistence
 
 **localStorage** (`mmui:v1:settings`):
-
 - API base URL, API key, active mode, stream toggle, reasoning toggle, theme
 
 **IndexedDB** (`mmui:v1`):
-
 - `threads` store: Thread objects (serialized without blob URLs)
 - `assets` store: Binary blobs (images, first frames)
 
+Settings that were previously in the topbar (host, API key, reasoning) are now in the **SettingsModal** component, triggered by the ⚙ gear button.
+
 ---
 
-## 6. Build & Test
+## 8. Build & Test
 
 ```sh
 npm install
@@ -109,7 +164,7 @@ The build step type-checks first. Fix all TypeScript errors before the Vite bund
 
 ---
 
-## 7. PR Guidelines
+## 9. PR Guidelines
 
 Before opening a PR, verify both pass locally:
 
@@ -122,75 +177,29 @@ npm test        # full test suite
 - Keep changes focused; build and tests must remain green
 - **DO NOT** add security measures (CORS, CSP, SSRF) — this is a local dev tool
 - **DO NOT** add new dependencies without compelling justification
+- **DO NOT** import fonts or assets from CDNs — everything must be local
 
 ---
 
-## 8. Design Principles
+## 10. Design Principles
 
-- **Dark-first**: The default theme is dark. No light mode.
-- **Developer-oriented**: Small fonts, compact spacing
-- **Space-efficient**: Sidebar toggleable, drawer as overlay
-- **No CDN dependencies**: All assets should be served from local paths when possible
-
----
-
-## 9. Agent & MCP Toolset Limitations
-
-When working with AI coding agents (e.g., GitHub Copilot) on this repository, note the following MCP (Model Context Protocol) toolset constraints:
-
-### Available Capabilities
-
-- **Code search and navigation**: Agents can search code, read files, and explore the repository structure
-- **Code editing**: Agents can create and edit files, run builds, and execute tests
-- **GitHub integration**: Agents can read issues, pull requests, commits, and workflow runs
-- **Pull request workflow**: Agents can create branches, commit changes, and open/update PRs
-
-### Unavailable Capabilities
-
-- **Direct issue creation**: Agents cannot create GitHub issues via MCP tools — issues must be created manually by repository maintainers
-- **Direct issue modification**: Agents cannot close, label, or assign issues programmatically
-- **Repository settings**: Agents cannot modify repository configuration, branch protection rules, or webhooks
-- **External API calls**: Agents cannot make live calls to the MiniMax API or any external service for testing
-
-### Best Practices for Agent-Assisted Development
-
-1. **Reference issues by number** in commits and PR descriptions rather than attempting to create or modify them
-2. **Run `npm run build` and `npm test`** before submitting changes to verify correctness
-3. **Keep changes focused** — one logical change per PR
-4. **Document decisions** in PR descriptions and code comments, not in transient issue comments
-5. **Use existing test patterns** when adding new test coverage (test files live next to source: `foo.test.ts` alongside `foo.ts`)
+- **Dark-first**: All themes are dark. No light mode. Never use bright greys or whites.
+- **Developer-oriented**: Small fonts (13px base, 10-11px for metadata), compact spacing
+- **VS Code / Cursor aesthetic**: Clean, lean, professional. Lots of visible text.
+- **High DPI aware**: System fonts render crisply at all scales
+- **Space-efficient**: Sidebar toggleable, settings in modal, drawer as overlay
+- **No CDN dependencies**: All assets served from local path
 
 ---
 
-## 10. Model Catalogs
+## 11. Future Enhancement Ideas
 
-- Text OpenAI-compatible: `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.1`, `MiniMax-M2.1-highspeed`, `MiniMax-M2`
-- Text native: `M2-her`
-- Image T2I: `image-01`
-- Image I2I: `image-01`, `image-01-live`
-- Video T2V: `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-02`, `T2V-01-Director`, `T2V-01`
-- Video I2V: `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, `MiniMax-Hailuo-02`, `I2V-01-Director`, `I2V-01-live`, `I2V-01`
+These are proposed but **not implemented** — left for discussion:
 
----
-
-## 11. Assumptions and Locked Defaults
-
-- Default host is `https://api.minimaxi.com/v1` because the user reported plan compatibility there, and browser CORS was locally validated.
-- `https://api.minimax.io/v1/models` and `https://api.minimaxi.com/v1/models` both returned `404` during local checks, so static model catalogs are the expected path.
-- The app intentionally stores the API key in plain `localStorage`; this is a deliberate local-machine tradeoff, not an accident.
-- The app is intentionally single-user, local-only, and disposable; no backend hardening, no multi-user auth, no SSR, no deployment abstraction.
-- Tool execution, speech/music APIs, video callbacks, and MiniMax MCP integration are out of scope for v1.
-
----
-
-## 12. References
-
-- [MiniMax API Overview](https://platform.minimax.io/docs/api-reference/api-overview)
-- [MiniMax MCP Guide](https://platform.minimax.io/docs/mcp)
-- [Compatible OpenAI API](https://platform.minimax.io/docs/api-reference/text-openai-api)
-- [Text Chat / M2-her](https://platform.minimax.io/docs/api-reference/text-chat)
-- [Text-to-Image](https://platform.minimax.io/docs/api-reference/image-generation-t2i)
-- [Image-to-Image](https://platform.minimax.io/docs/api-reference/image-generation-i2i)
-- [Text-to-Video](https://platform.minimax.io/docs/api-reference/video-generation-t2v)
-- [Image-to-Video](https://platform.minimax.io/docs/api-reference/video-generation-i2v)
-- [Query Video Generation Status](https://platform.minimax.io/docs/api-reference/video-generation-query)
+1. **Keyboard shortcuts**: Ctrl+Enter to send, Ctrl+B to toggle sidebar, Ctrl+, for settings
+2. **Thread search/filter**: Quick filter in sidebar for finding threads by title
+3. **Export thread as JSON/Markdown**: Download conversation history
+4. **Token cost estimation**: Show estimated API cost per request based on model pricing
+5. **Response diff view**: Compare two responses side by side
+6. **Persistent advanced drawer state**: Remember which drawer fields were expanded
+7. **Drag-and-drop file upload**: Drop images directly onto the composer

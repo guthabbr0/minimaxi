@@ -1,15 +1,15 @@
-import { THEME_IDS, type Theme } from "../types";
+import type { Theme } from "../types";
 
 interface ThemeSwitcherProps {
   activeTheme: Theme;
   onThemeChange: (theme: Theme) => void;
 }
 
-const THEME_LABELS: Record<Theme, string> = {
-  midnight: "Midnight",
-  ember: "Ember",
-  abyss: "Abyss"
-};
+const THEMES: { id: Theme; label: string; key: string }[] = [
+  { id: "midnight", label: "Midnight", key: "1" },
+  { id: "ember", label: "Ember", key: "2" },
+  { id: "abyss", label: "Abyss", key: "3" }
+];
 
 export function ThemeSwitcher({
   activeTheme,
@@ -17,19 +17,19 @@ export function ThemeSwitcher({
 }: ThemeSwitcherProps) {
   return (
     <div className="theme-switcher">
-      {THEME_IDS.map((id, index) => (
+      {THEMES.map((theme) => (
         <button
-          key={id}
+          key={theme.id}
           className={`theme-switcher__btn ${
-            activeTheme === id ? "theme-switcher__btn--active" : ""
+            activeTheme === theme.id ? "theme-switcher__btn--active" : ""
           }`}
           type="button"
-          title={THEME_LABELS[id]}
-          aria-label={THEME_LABELS[id]}
-          aria-pressed={activeTheme === id}
-          onClick={() => onThemeChange(id)}
+          title={theme.label}
+          aria-label={theme.label}
+          aria-pressed={activeTheme === theme.id}
+          onClick={() => onThemeChange(theme.id)}
         >
-          {index + 1}
+          {theme.key}
         </button>
       ))}
     </div>
