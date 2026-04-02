@@ -1,5 +1,6 @@
 export type AppMode = "text" | "image" | "video";
-export type Theme = "midnight" | "ember" | "abyss";
+export const THEME_IDS = ["midnight", "ember", "abyss"] as const;
+export type Theme = (typeof THEME_IDS)[number];
 export type TextBackend = "openai" | "native";
 export type CatalogSource = "static" | "dynamic";
 export type ThreadItemStatus = "running" | "success" | "error";

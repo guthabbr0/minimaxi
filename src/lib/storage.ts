@@ -4,10 +4,10 @@ import { blobToDataUrl, createId } from "./minimax/base";
 import type {
   AppSettings,
   ImageReference,
-  Theme,
   Thread,
   UploadAsset
 } from "../types";
+import { THEME_IDS, type Theme } from "../types";
 
 const SETTINGS_KEY = "mmui:v1:settings";
 const DB_NAME = "mmui:v1";
@@ -35,7 +35,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   theme: "midnight"
 };
 
-const VALID_THEMES = new Set<Theme>(["midnight", "ember", "abyss"]);
+const VALID_THEMES = new Set<Theme>(THEME_IDS);
 
 export function createDefaultThread(): Thread {
   const now = Date.now();
