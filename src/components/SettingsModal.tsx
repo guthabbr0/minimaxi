@@ -75,12 +75,13 @@ export function SettingsModal({
                 });
               }}
             >
-              <option value={DEFAULT_API_BASE_URL}>
-                {DEFAULT_API_BASE_URL}
-              </option>
-              <option value="https://api.minimax.io/v1">
-                https://api.minimax.io/v1
-              </option>
+              {API_BASE_PRESETS.filter((preset) => preset !== "custom").map(
+                (preset) => (
+                  <option key={preset} value={preset}>
+                    {preset}
+                  </option>
+                )
+              )}
               <option value="custom">Custom</option>
             </select>
           </label>
